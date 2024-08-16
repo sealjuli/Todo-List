@@ -2,7 +2,13 @@ require('dotenv').config(); // Пакет dotenv имортируется для
 const express = require("express");
 const app = express();
 
+const swaggerUi = require('swagger-ui-express'); // Подключение Swagger UI к Node.js
+const swaggerSpec = require('../swaggerSpec.js');
+
 app.use(express.json()); //  Этот middleware парсит JSON-запросы, предоставляя доступ к данным в формате JSON в req.body
+
+// Определяем маршрут для Swagger UI
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // функция логирования
 function loggerMiddleware(req, res, next) {
