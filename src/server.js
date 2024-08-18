@@ -1,9 +1,22 @@
 require('dotenv').config(); // Пакет dotenv имортируется для того, чтобы можно было использовать переменные окружения
 const express = require("express");
-const app = express();
 
 const swaggerUi = require('swagger-ui-express'); // Подключение Swagger UI к Node.js
 const swaggerSpec = require('../swaggerSpec.js');
+
+const app = express();
+
+// Инициализация Sentry
+const Sentry = require("@sentry/node");
+
+Sentry.init({
+  dsn: "https://909c0ed5cdc2e8256ff5ba0ba2e4ed90@o4507798406823936.ingest.de.sentry.io/4507798414884944",
+  // Другие опции настройки
+});
+
+
+// Обработчики Sentry
+Sentry.setupExpressErrorHandler(app);
 
 app.use(express.json()); //  Этот middleware парсит JSON-запросы, предоставляя доступ к данным в формате JSON в req.body
 

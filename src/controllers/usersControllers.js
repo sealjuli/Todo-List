@@ -36,6 +36,7 @@ class UsersControllers {
 
       res.send("Новый пользователь зарегестрирован");
     } catch (error) {
+      Sentry.captureException(error);
       console.error(error);
       res.status(500).json({ message: "Ошибка регистрации пользователя" });
     }
@@ -70,6 +71,7 @@ class UsersControllers {
 
       res.json({ token });
     } catch (error) {
+      Sentry.captureException(error);
       console.error(error);
       res.status(500).json({ message: "Ошибка входа в систему" });
     }
