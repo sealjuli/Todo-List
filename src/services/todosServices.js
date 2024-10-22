@@ -1,3 +1,67 @@
+const { ObjectId } = require("mongodb");
+const { getConnection, useDefaultDb } = require("../helpers/mongoHelper");
+
+class TodosServices {
+  #COLLECTION = "tasks";
+
+  async getTasks() {
+    const connection = await getConnection();
+    const db = useDefaultDb(connection);
+    const data = await db.collection(this.#COLLECTION).find({}).toArray();
+    connection.close();
+    return data;
+  }
+
+  async createTask(task) {
+    const connection = await getConnection();
+    const db = useDefaultDb(connection);
+    await db.collection(this.#COLLECTION).insertOne(task);
+    connection.close();
+  }
+
+  async findTaskById(id) {
+    const connection = await getConnection();
+    const db = useDefaultDb(connection);
+    const data = await db
+      .collection(this.#COLLECTION)
+      .aggregate([{ $match: { _id: new ObjectId(id) } }])
+      .toArray();
+    connection.close();
+    return data[0];
+  }
+
+  async updateTask(id, title) {
+    const connection = await getConnection();
+    const db = useDefaultDb(connection);
+    await db
+      .collection(this.#COLLECTION)
+      .updateOne({ _id: new ObjectId(id) }, { $set: { title } });
+    connection.close();
+  }
+
+  async updateComplete(id, isCompleted) {
+    const connection = await getConnection();
+    const db = useDefaultDb(connection);
+    await db
+      .collection(this.#COLLECTION)
+      .updateOne(
+        { _id: new ObjectId(id) },
+        { $set: { isCompleted: !isCompleted } }
+      );
+    connection.close();
+  }
+
+  async deleteTask(id) {
+    const connection = await getConnection();
+    const db = useDefaultDb(connection);
+    await db.collection(this.#COLLECTION).deleteOne({ _id: new ObjectId(id) });
+    connection.close();
+  }
+}
+
+module.exports = new TodosServices();
+
+/*
 const FileHelper = require("../helpers/fileHelper");
 
 class TodosServices {
@@ -42,3 +106,4 @@ class TodosServices {
 }
 
 module.exports = new TodosServices();
+*/

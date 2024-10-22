@@ -28,7 +28,7 @@ class UsersControllers {
 
       // Создание нового пользователя
       const newUser = {
-        id: uuidv4(),
+        // id: uuidv4(),
         login,
         password: hashedPassword,
       };
@@ -65,7 +65,7 @@ class UsersControllers {
 
       // Создание JWT-токена для авторизации
       const token = jwt.sign(
-        { userId: user.id },
+        { userId: user._id },
         process.env.ACCESS_TOKEN_SECRET
       );
 

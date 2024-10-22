@@ -1,6 +1,6 @@
 const TodosServices = require("../services/todosServices");
 
-const { v4: uuidv4 } = require("uuid");
+// const { v4: uuidv4 } = require("uuid");
 
 const { validationResult } = require("express-validator");
 
@@ -26,15 +26,15 @@ class TodosControllers {
     }
 
     try {
-      const uuid = uuidv4();
+      // const uuid = uuidv4();
       const result = await TodosServices.createTask({
-        id: uuid,
+        // id: uuid,
         ...req.body,
         idUser: req.userId,
       });
       res.send(
         `Новое задание создано. ${JSON.stringify({
-          id: uuid,
+          // id: uuid,
           ...req.body,
           idUser: req.userId,
         })}`
@@ -51,14 +51,12 @@ class TodosControllers {
     }
 
     try {
-      const taskIndex = await TodosServices.findTaskIndexById(req.params.id);
-      if (taskIndex < 0) {
+      const task = await TodosServices.findTaskById(req.params.id);
+      if (!task) {
         res.send("Задание с указанным id не найдено");
       } else {
-        await TodosServices.updateTitleByIndex(taskIndex, req.body.title);
-        res.send(
-          JSON.stringify(await TodosServices.getTaskById(req.params.id))
-        );
+        await TodosServices.updateTask(req.params.id, req.body.title);
+        res.send("Задание обновлено.");
       }
     } catch (error) {
       Sentry.captureException(error);
@@ -72,14 +70,13 @@ class TodosControllers {
     }
 
     try {
-      const taskIndex = await TodosServices.findTaskIndexById(req.params.id);
-      if (taskIndex < 0) {
+      const task = await TodosServices.findTaskById(req.params.id);
+      if (!task) {
         res.send("Задание с указанным id не найдено");
       } else {
-        await TodosServices.updateCompleteByIndex(taskIndex);
-        res.send(
-          JSON.stringify(await TodosServices.getTaskById(req.params.id))
-        );
+        console.log(task);
+        await TodosServices.updateComplete(req.params.id, task.isCompleted);
+        res.send("Задание обновлено.");
       }
     } catch (error) {
       Sentry.captureException(error);
@@ -93,12 +90,13 @@ class TodosControllers {
     }
 
     try {
-      const taskIndex = await TodosServices.findTaskIndexById(req.params.id);
-      if (taskIndex < 0) {
+      const task = await TodosServices.findTaskById(req.params.id);
+      if (!task) {
         res.send("Задание с указанным id не найдено");
       } else {
-        await TodosServices.deleteTaskByIndex(taskIndex);
-        res.send(JSON.stringify(await TodosServices.getTasks()));
+        console.log(task)
+        await TodosServices.deleteTask(req.params.id);
+        res.send("Задание удалено.");
       }
     } catch (error) {
       Sentry.captureException(error);
