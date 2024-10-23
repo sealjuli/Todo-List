@@ -32,13 +32,7 @@ class TodosControllers {
         ...req.body,
         idUser: req.userId,
       });
-      res.send(
-        `Новое задание создано. ${JSON.stringify({
-          // id: uuid,
-          ...req.body,
-          idUser: req.userId,
-        })}`
-      );
+      res.send("Новое задание создано.");
     } catch (error) {
       Sentry.captureException(error);
     }
@@ -74,7 +68,6 @@ class TodosControllers {
       if (!task) {
         res.send("Задание с указанным id не найдено");
       } else {
-        console.log(task);
         await TodosServices.updateComplete(req.params.id, task.isCompleted);
         res.send("Задание обновлено.");
       }
@@ -94,7 +87,6 @@ class TodosControllers {
       if (!task) {
         res.send("Задание с указанным id не найдено");
       } else {
-        console.log(task)
         await TodosServices.deleteTask(req.params.id);
         res.send("Задание удалено.");
       }

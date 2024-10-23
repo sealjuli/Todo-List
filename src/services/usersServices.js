@@ -1,3 +1,21 @@
+const User = require("../models/usersModel");
+
+class UsersServices {
+  async findUserByLogin(login) {
+    const user = await User.findOne({ login });
+    return user;
+  }
+
+  async saveUser(user) {
+    const newUser = new User(user);
+    const result = newUser.save();
+    return result;
+  }
+}
+
+module.exports = new UsersServices();
+
+/*
 const { getConnection, useDefaultDb } = require("../helpers/mongoHelper");
 
 class UsersServices {
@@ -23,6 +41,7 @@ class UsersServices {
 }
 
 module.exports = new UsersServices();
+*/
 
 /*
 const FileHelper = require("../helpers/fileHelper");

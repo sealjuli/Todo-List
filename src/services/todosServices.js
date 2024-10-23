@@ -1,4 +1,44 @@
 const { ObjectId } = require("mongodb");
+const Task = require("../models/tasksModel");
+
+class TodosServices {
+  async getTasks() {
+    const data = await Task.find({}).populate("idUser");
+    return data;
+  }
+
+  async createTask(task) {
+    const newTask = new Task(task);
+    const result = newTask.save();
+    return result;
+  }
+
+  async findTaskById(id) {
+    const task = await Task.findOne({ _id: new ObjectId(id) });
+    return task;
+  }
+
+  async updateTask(id, title) {
+    const task = await Task.findByIdAndUpdate(new ObjectId(id), { title });
+    return task;
+  }
+
+  async updateComplete(id, isCompleted) {
+    const task = await Task.findByIdAndUpdate(new ObjectId(id), {
+      isCompleted: !isCompleted,
+    });
+    return task;
+  }
+
+  async deleteTask(id) {
+    await Task.findByIdAndDelete(new ObjectId(id));
+  }
+}
+
+module.exports = new TodosServices();
+
+/*
+const { ObjectId } = require("mongodb");
 const { getConnection, useDefaultDb } = require("../helpers/mongoHelper");
 
 class TodosServices {
@@ -60,6 +100,7 @@ class TodosServices {
 }
 
 module.exports = new TodosServices();
+*/
 
 /*
 const FileHelper = require("../helpers/fileHelper");
