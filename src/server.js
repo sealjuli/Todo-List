@@ -36,6 +36,7 @@ app.use("/api", router); // будет выполняться для всех з
 const PORT = process.env.PORT; // загрузка переменных окружения
 
 // Подключение соединения c MongoDB
+/*
 const mongoose = require("mongoose");
 const connectDb = require("./config/db.js");
 
@@ -47,9 +48,8 @@ mongoose.connection.once("open", () => {
     console.log(`Сервер запущен на http://localhost:${PORT}`)
   );
 });
+*/
 
-/*
 app.listen(PORT, () => {
   console.log(`Сервер запущен на http://localhost:${PORT}`);
 });
-*/

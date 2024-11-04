@@ -18,7 +18,7 @@ const validateTitle = [
 
 const validateParamId = [
   param("id")
-    .isLength({ min: 5 })
+    .isLength({ min: 1 })
     .withMessage("Id задания слишком короткий."),
 ];
 

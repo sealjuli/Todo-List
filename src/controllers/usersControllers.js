@@ -1,7 +1,7 @@
 const UsersServices = require("../services/usersServices");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { v4: uuidv4 } = require("uuid");
+// const { v4: uuidv4 } = require("uuid");
 const { validationResult } = require("express-validator");
 
 class UsersControllers {
@@ -65,7 +65,7 @@ class UsersControllers {
 
       // Создание JWT-токена для авторизации
       const token = jwt.sign(
-        { userId: user._id },
+        { userId: user.id },
         process.env.ACCESS_TOKEN_SECRET
       );
 
