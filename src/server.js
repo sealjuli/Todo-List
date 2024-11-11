@@ -10,7 +10,7 @@ const app = express();
 const Sentry = require("@sentry/node");
 
 Sentry.init({
-  dsn: "https://909c0ed5cdc2e8256ff5ba0ba2e4ed90@o4507798406823936.ingest.de.sentry.io/4507798414884944",
+  dsn: process.env.DSN,
   // Другие опции настройки
 });
 
