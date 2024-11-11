@@ -3,6 +3,7 @@ const TodosServices = require("../services/todosServices");
 // const { v4: uuidv4 } = require("uuid");
 
 const { validationResult } = require("express-validator");
+const Sentry = require("@sentry/node");
 
 class TodosControllers {
   async getTasks(req, res) {

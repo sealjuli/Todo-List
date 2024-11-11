@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 // const { v4: uuidv4 } = require("uuid");
 const { validationResult } = require("express-validator");
+const Sentry = require("@sentry/node");
 
 class UsersControllers {
   async userRegister(req, res) {
@@ -15,8 +16,8 @@ class UsersControllers {
       const { login, password } = req.body;
 
       // Проверка, что пользователь с таким login не существует
-      const existingUser = await UsersServices.findUserByLogin(login);
-      if (existingUser) {
+      const user = await UsersServices.findUserByLogin(login);
+      if (user) {
         return res
           .status(400)
           .json({ message: "Пользователь с таким login уже существует" });

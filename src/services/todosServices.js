@@ -1,3 +1,122 @@
+const db = require("../config/db");
+
+class TodosServices {
+  async createTask(task) {
+    let database;
+    try {
+      database = await db.connect();
+      const newTask = await database.query(
+        "INSERT INTO Tasks (title, isCompleted, idUser) VALUES ($1, $2, $3) RETURNING *",
+        [task.title, task.isCompleted, task.idUser]
+      );
+      return newTask;
+    } catch (err) {
+      console.log("Error ", err);
+      throw err;
+    } finally {
+      if (database) {
+        // db.end();
+        database.release();
+      }
+    }
+  }
+
+  async findTaskById(id) {
+    let database;
+    try {
+      database = await db.connect();
+      const task = await database.query("Select * FROM Tasks WHERE id = $1", [
+        id,
+      ]);
+      return task;
+    } catch (err) {
+      console.log("Error ", err);
+      throw err;
+    } finally {
+      if (database) {
+        // db.end();
+        database.release();
+      }
+    }
+  }
+
+  async getTasks() {
+    let database;
+    try {
+      database = await db.connect();
+      const data = await database.query("Select * FROM Tasks");
+      return data;
+    } catch (err) {
+      console.log("Error ", err);
+      throw err;
+    } finally {
+      if (database) {
+        // db.end();
+        database.release();
+      }
+    }
+  }
+
+  async updateTask(id, title) {
+    let database;
+    try {
+      database = await db.connect();
+      const task = await database.query(
+        "UPDATE Tasks SET title = $1 WHERE id = $2",
+        [title, id]
+      );
+      return task;
+    } catch (err) {
+      console.log("Error ", err);
+      throw err;
+    } finally {
+      if (database) {
+        // db.end();
+        database.release();
+      }
+    }
+  }
+
+  async updateComplete(id, isCompleted) {
+    let database;
+    try {
+      database = await db.connect();
+      const task = await database.query(
+        "UPDATE Tasks SET isCompleted = $1 WHERE id = $2",
+        [!isCompleted, id]
+      );
+      return task;
+    } catch (err) {
+      console.log("Error ", err);
+      throw err;
+    } finally {
+      if (database) {
+        // db.end();
+        database.release();
+      }
+    }
+  }
+
+  async deleteTask(id) {
+    let database;
+    try {
+      database = await db.connect();
+      await database.query("DELETE FROM Tasks WHERE id = $1", [id]);
+    } catch (err) {
+      console.log("Error ", err);
+      throw err;
+    } finally {
+      if (database) {
+        // db.end();
+        database.release();
+      }
+    }
+  }
+}
+
+module.exports = new TodosServices();
+
+/*
 const Tasks = require("../models/tasks.model");
 
 class TodosServices {
@@ -35,6 +154,7 @@ class TodosServices {
 }
 
 module.exports = new TodosServices();
+*/
 
 /*const { ObjectId } = require("mongodb");
 const Task = require("../models/tasksModel");

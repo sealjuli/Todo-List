@@ -1,3 +1,49 @@
+const db = require("../config/db");
+
+class UsersServices {
+  async findUserByLogin(login) {
+    let database;
+    try {
+      database = await db.connect();
+      const user = await database.query(
+        'Select * FROM public."Users" WHERE login = $1',
+        [login]
+      );
+      return user.rows[0];
+    } catch (err) {
+      console.log("Error ", err);
+      throw err;
+    } finally {
+      if (database) {
+        // db.end();
+        database.release();
+      }
+    }
+  }
+
+  async saveUser(user) {
+    let database;
+    try {
+      database = await db.connect();
+      const newUser = await database.query(
+        'INSERT INTO public."Users" (login, password) VALUES ($1, $2) RETURNING *',
+        [user.login, user.password]
+      );
+    } catch (err) {
+      console.log("Error ", err);
+      throw err;
+    } finally {
+      if (database) {
+        // db.end();
+        database.release();
+      }
+    }
+  }
+}
+
+module.exports = new UsersServices();
+
+/*
 const { Users } = require("../models/models");
 
 class UsersServices {
@@ -13,6 +59,7 @@ class UsersServices {
 }
 
 module.exports = new UsersServices();
+*/
 
 /*
 const User = require("../models/usersModel");
