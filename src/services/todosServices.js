@@ -6,7 +6,7 @@ class TodosServices {
     try {
       database = await db.connect();
       const newTask = await database.query(
-        "INSERT INTO Tasks (title, isCompleted, idUser) VALUES ($1, $2, $3) RETURNING *",
+        'INSERT INTO public."Tasks" (title, "isCompleted", "idUser") VALUES ($1, $2, $3) RETURNING *',
         [task.title, task.isCompleted, task.idUser]
       );
       return newTask;
@@ -25,10 +25,11 @@ class TodosServices {
     let database;
     try {
       database = await db.connect();
-      const task = await database.query("Select * FROM Tasks WHERE id = $1", [
-        id,
-      ]);
-      return task;
+      const task = await database.query(
+        'Select * FROM public."Tasks" WHERE id = $1',
+        [id]
+      );
+      return task.rows[0];
     } catch (err) {
       console.log("Error ", err);
       throw err;
@@ -44,8 +45,8 @@ class TodosServices {
     let database;
     try {
       database = await db.connect();
-      const data = await database.query("Select * FROM Tasks");
-      return data;
+      const data = await database.query('Select * FROM public."Tasks"');
+      return data.rows;
     } catch (err) {
       console.log("Error ", err);
       throw err;
@@ -62,7 +63,7 @@ class TodosServices {
     try {
       database = await db.connect();
       const task = await database.query(
-        "UPDATE Tasks SET title = $1 WHERE id = $2",
+        'UPDATE public."Tasks" SET title = $1 WHERE id = $2',
         [title, id]
       );
       return task;
@@ -82,7 +83,7 @@ class TodosServices {
     try {
       database = await db.connect();
       const task = await database.query(
-        "UPDATE Tasks SET isCompleted = $1 WHERE id = $2",
+        'UPDATE public."Tasks" SET "isCompleted" = $1 WHERE id = $2',
         [!isCompleted, id]
       );
       return task;
@@ -101,7 +102,7 @@ class TodosServices {
     let database;
     try {
       database = await db.connect();
-      await database.query("DELETE FROM Tasks WHERE id = $1", [id]);
+      await database.query('DELETE FROM public."Tasks" WHERE id = $1', [id]);
     } catch (err) {
       console.log("Error ", err);
       throw err;
